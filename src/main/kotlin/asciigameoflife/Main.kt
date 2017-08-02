@@ -8,7 +8,7 @@ import java.util.*
 import javax.swing.JFrame
 import javax.swing.JPanel
 
-val neigbours = arrayOf(Pair(-1, -1), Pair(-1, 0), Pair(-1, 1), Pair(0, -1),
+val neighbours = arrayOf(Pair(-1, -1), Pair(-1, 0), Pair(-1, 1), Pair(0, -1),
                         Pair(0, 1), Pair(1, -1), Pair(1, 0), Pair(1, 1))
 
 /*val input = """7 10 10
@@ -99,17 +99,17 @@ fun draw(generation: Array<IntArray>, to: BufferedImage, tileSize: Int) {
     to.clear()
     to.graphics.color = Color.black
     generation.forEachIndexed {
-        y, ints -> (0..w - 1)
+        y, ints -> (0 until w)
             .filter { ints[it] == 0 }
             .forEach { x -> to.graphics.fillRect(x * tileSize, (h - y - 1) * tileSize, tileSize, tileSize) }
     }
 }
 
 fun calculateNextGen(heigth: Int, width: Int, currentGen: Array<IntArray>, nextGen: Array<IntArray>) {
-    for (i in currentGen.indices) {
-        for (j in currentGen[i].indices) {
+    for (i in 0 until heigth) {
+        for (j in 0 until width) {
             var aliveNeighbours = 0
-            for ((nY, nX) in neigbours) {   // count the alive neighbours
+            for ((nY, nX) in neighbours) {   // count the alive neighbours
                 val y = (i + nY + heigth) % heigth  // wrap around height
                 val x = (j + nX + width) % width    // wrap around width
                 if (currentGen[y][x] == 1)
