@@ -68,7 +68,6 @@ fun main(args: Array<String>) {
 
     with(JFrame()) {
         this.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-        this.setSize(w * TILE, h * TILE)
         this.add(object : JPanel() {
             override fun paintComponent(g: Graphics?) {
                 super.paintComponent(g)
@@ -76,6 +75,7 @@ fun main(args: Array<String>) {
             }
         })
         isVisible = true
+        this.setSize(image.width, image.height + height)
 
         // print first gen
         draw(generation = lastGeneration, to = image, tileSize = TILE)
