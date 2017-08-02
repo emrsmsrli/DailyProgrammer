@@ -3,6 +3,7 @@ package asciigameoflife
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.image.BufferedImage
+import java.awt.image.ImageObserver
 import java.util.*
 import javax.swing.JFrame
 import javax.swing.JPanel
@@ -10,44 +11,47 @@ import javax.swing.JPanel
 val neigbours = arrayOf(Pair(-1, -1), Pair(-1, 0), Pair(-1, 1), Pair(0, -1),
                         Pair(0, 1), Pair(1, -1), Pair(1, 0), Pair(1, 1))
 
-val input = """ 7 10 10
-                0 0 0 0 0 0 0 0 0 0
-                0 0 0 0 0 0 0 0 0 0
-                0 0 1 0 0 0 0 0 0 0
-                0 0 0 1 0 0 0 0 0 0
-                0 1 1 1 0 0 0 0 0 0
-                0 0 0 0 0 0 0 0 0 0
-                0 0 0 0 0 0 0 0 0 0
-                0 0 0 0 0 0 0 0 0 0
-                0 0 0 0 0 0 0 0 0 0
-                0 0 0 0 0 0 0 0 0 0 """
+/*val input = """7 10 10
+..........
+..........
+..#.......
+...#......
+.###......
+..........
+..........
+..........
+..........
+.........."""*/
 
-val challenge = """ 32 17 17
-                    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-                    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-                    0 0 0 0 1 1 1 0 0 0 1 1 1 0 0 0 0
-                    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-                    0 0 1 0 0 0 0 1 0 1 0 0 0 0 1 0 0
-                    0 0 1 0 0 0 0 1 0 1 0 0 0 0 1 0 0
-                    0 0 1 0 0 0 0 1 0 1 0 0 0 0 1 0 0
-                    0 0 0 0 1 1 1 0 0 0 1 1 1 0 0 0 0
-                    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-                    0 0 0 0 1 1 1 0 0 0 1 1 1 0 0 0 0
-                    0 0 1 0 0 0 0 1 0 1 0 0 0 0 1 0 0
-                    0 0 1 0 0 0 0 1 0 1 0 0 0 0 1 0 0
-                    0 0 1 0 0 0 0 1 0 1 0 0 0 0 1 0 0
-                    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-                    0 0 0 0 1 1 1 0 0 0 1 1 1 0 0 0 0
-                    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-                    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 """"
+val input = """32 17 17
+.................
+.................
+....###...###....
+.................
+..#....#.#....#..
+..#....#.#....#..
+..#....#.#....#..
+....###...###....
+.................
+....###...###....
+..#....#.#....#..
+..#....#.#....#..
+..#....#.#....#..
+.................
+....###...###....
+.................
+................."""
+
+const val TILE = 50
 
 fun main(args: Array<String>) {
     // init
-    val reader = Scanner(challenge) // Scanner(challenge || input)
+    val firstGen = input.replace(".", "0 ").replace("#", "1 ")
+    val reader = Scanner(firstGen)
     val simCount = reader.nextInt()
     val h = reader.nextInt()
     val w = reader.nextInt()
-    val imageBuffer = BufferedImage(w * 50, h * 50, BufferedImage.TYPE_INT_ARGB)
+    val image = BufferedImage(w * TILE, h * TILE, BufferedImage.TYPE_INT_ARGB)
 
     val lastGeneration = Array(size = h) {
         IntArray(size = w) {
@@ -62,36 +66,42 @@ fun main(args: Array<String>) {
         }
     }
 
-    // print first gen
-    lastGeneration.printGen()
-
     with(JFrame()) {
-        this.setSize(w * 50, h * 50)
+        this.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+        this.setSize(w * TILE, h * TILE)
         this.add(object : JPanel() {
             override fun paintComponent(g: Graphics?) {
                 super.paintComponent(g)
-                g?.drawImage(imageBuffer, 0, 0, this)
+                g?.drawImage(image, 0, 0, this)
             }
         })
         isVisible = true
 
+        // print first gen
+        draw(generation = lastGeneration, to = image, tileSize = TILE)
+
         // simulate for simCount times
         for (i in 1..simCount) {
-            imageBuffer.graphics.clearRect(0, 0, w * 50, h * 50)
             calculateNextGen(heigth = h, width = w, currentGen = lastGeneration, nextGen = currentGeneration)
-            currentGeneration.forEachIndexed { y, ints -> ints.forEachIndexed { x, value -> lastGeneration[y][x] = value } }
-            imageBuffer.graphics.color = Color.black
-            imageBuffer.graphics.drawRect(0, 0, imageBuffer.width, imageBuffer.height)
-            currentGeneration.forEachIndexed { y, ints -> ints.forEachIndexed { x, value ->
-                if(value == 1) {
-                    imageBuffer.graphics.color = Color.black
-                    imageBuffer.graphics.fillRect(x * 50, (h - y - 1) * 50, 50, 50)
-                } } }
-            //currentGeneration.printGen()
-            this.imageUpdate(imageBuffer, 32,0, 0, h * 50, w * 50)
+            currentGeneration.copy(to = lastGeneration)
+
+            draw(generation = currentGeneration, to = image, tileSize = TILE)
+            imageUpdate(image, ImageObserver.ALLBITS,0, 0, image.width, image.height)
 
             Thread.sleep(300)
         }
+    }
+}
+
+fun draw(generation: Array<IntArray>, to: BufferedImage, tileSize: Int) {
+    val h = generation.size
+    val w = generation[0].size
+    to.clear()
+    to.graphics.color = Color.black
+    generation.forEachIndexed {
+        y, ints -> (0..w - 1)
+            .filter { ints[it] == 0 }
+            .forEach { x -> to.graphics.fillRect(x * tileSize, (h - y - 1) * tileSize, tileSize, tileSize) }
     }
 }
 
@@ -112,16 +122,4 @@ fun calculateNextGen(heigth: Int, width: Int, currentGen: Array<IntArray>, nextG
                 nextGen[i][j] = 0
         }
     }
-}
-
-fun Array<IntArray>.printGen() {
-    fun IntArray.printArray() {
-        for (i in this)
-            print("${if (i == 1) "#" else "."} ")
-        println()
-    }
-
-    for (line in this)
-        line.printArray()
-    println()
 }
