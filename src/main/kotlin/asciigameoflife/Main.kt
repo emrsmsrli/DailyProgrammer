@@ -1,3 +1,5 @@
+// https://www.reddit.com/r/dailyprogrammer/comments/271xyp/622014_challenge_165_easy_ascii_game_of_life/
+
 package asciigameoflife
 
 import java.awt.Color
