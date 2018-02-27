@@ -1,5 +1,15 @@
 package forestsim
 
-class Logger(fileName: String) {
+import java.io.PrintWriter
 
+class Logger(name: String) {
+    private val writer = PrintWriter("$name.txt")
+
+    fun log(type: String, msg: String) {
+        writer.println("$type: $msg")
+    }
+
+    fun close() {
+        writer.close()
+    }
 }
