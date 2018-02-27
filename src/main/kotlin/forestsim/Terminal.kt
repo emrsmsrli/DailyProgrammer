@@ -37,4 +37,8 @@ object Terminal {
         terminal.flush()
         terminal.putCursorAt(Position.TOP_LEFT_CORNER)
     }
+
+    fun close() {
+        terminal.close()
+    }
 }
