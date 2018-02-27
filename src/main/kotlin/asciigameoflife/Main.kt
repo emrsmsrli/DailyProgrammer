@@ -13,7 +13,7 @@ import javax.swing.JPanel
 val neighbours = arrayOf(Pair(-1, -1), Pair(-1, 0), Pair(-1, 1), Pair(0, -1),
                         Pair(0, 1), Pair(1, -1), Pair(1, 0), Pair(1, 1))
 
-/*val input = """7 10 10
+/*const val input = """7 10 10
 ..........
 ..........
 ..#.......
@@ -25,7 +25,7 @@ val neighbours = arrayOf(Pair(-1, -1), Pair(-1, 0), Pair(-1, 1), Pair(0, -1),
 ..........
 .........."""*/
 
-val input = """32 17 17
+const val input = """32 17 17
 .................
 .................
 ....###...###....
@@ -61,10 +61,9 @@ fun main(args: Array<String>) {
         }
     }
 
-    val currentGeneration = Array(size = h) {
-        val y = it
-        IntArray(size = w) {
-            lastGeneration[y][it]
+    val currentGeneration = Array(size = h) { y ->
+        IntArray(size = w) { x->
+            lastGeneration[y][x]
         }
     }
 
