@@ -8,4 +8,5 @@ fun main(args: Array<String>) {
 
     while(!forest.isDying())
         forest.tick()
+    forest.die()
 }
