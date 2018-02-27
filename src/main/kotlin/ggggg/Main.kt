@@ -7,10 +7,10 @@ import java.util.*
 val letterDictionary = mutableMapOf<String, String>()
 val wordDictionary = mutableMapOf<String, String>()
 
-/*val input: String = """H GgG d gGg e ggG l GGg o gGG r Ggg w ggg
+/*const val input: String = """H GgG d gGg e ggG l GGg o gGG r Ggg w ggg
 GgGggGGGgGGggGG, ggggGGGggGGggGg!"""*/
 
-val encoded = """a GgG d GggGg e GggGG g GGGgg h GGGgG i GGGGg l GGGGG m ggg o GGg p Gggg r gG y ggG
+const val encoded = """a GgG d GggGg e GggGG g GGGgg h GGGgG i GGGGg l GGGGG m ggg o GGg p Gggg r gG y ggG
 GGGgGGGgGGggGGgGggG /gG/GggGgGgGGGGGgGGGGGggGGggggGGGgGGGgggGGgGggggggGggGGgG!"""
 
 fun main(args: Array<String>) {
