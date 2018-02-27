@@ -79,7 +79,7 @@ class Forest {
             }
             if(tree is IGrowableTree<*>) {
                 if(tree.isGrown()) {
-                    units.removeIf { it == tree}
+                    units.removeIf { it == tree }
                     val grown = tree.grow()
                     units.add(grown)
 
