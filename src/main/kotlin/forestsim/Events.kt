@@ -91,7 +91,7 @@ object Events {
     }
 
     fun close() {
-        l.log("TOTAL", "$totalSpawn saplings spawn")
+        l.log("TOTAL", "$totalSpawn saplings spawned")
         l.log("TOTAL", "$totalGrowT saplings grown to trees")
         l.log("TOTAL", "$totalGrowE trees grown to elder trees")
         l.log("TOTAL", "$totalHarvest lumbers harvested")
